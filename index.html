@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#000000">
+
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="shortcut icon" href="./favicon.png">
+
+  <link rel="stylesheet" href="./src/index.scss">
+
+  <title>paper_anthology: </title>
+  <meta name="description"
+        content="Effortlessly explore NeurIPS papers from the past 40+ years. Search which is quicker, more accurate and more relevant than ever." />
+  <meta name="keywords" content="neurips top ai papers, search neurips, find neurips, browse neurips, ai papers, search nips, neurips xyz, NeurIPS papers, AI research, machine learning papers, NeurIPS search, NeurIPS archives, find research papers, AI conference papers, NeurIPS proceedings, AI search tool" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://neurips.paperfinder.xyz">
+  <meta property="og:title" content="NeurIPS Paper Search Engine">
+  <meta property="og:description" content="Explore and discover NeurIPS papers with ease. Advanced filtering and full-text search capabilities for AI research." />
+  <meta property="og:image" content="./images/opengraph_banner.png">
+
+  <!-- Twitter Metadata -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="NeurIPS Paper Search Engine">
+  <meta name="twitter:description" content="Explore and discover NeurIPS papers with ease. Advanced filtering and full-text search capabilities for finding relevant ai-research." />
+  <meta name="twitter:image" content="./images/opengraph_banner.png">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116415641-10"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-116415641-10');
+  </script>
+  <script>
+                document.querySelectorAll('.abstract-container').forEach(container => {
+                  container.innerHTML = container.innerHTML.replace(/\$(.*?)\$/g, (_, latex) => {
+                    try {
+                      return katex.renderToString(latex, { throwOnError: false });
+                    } catch {
+                      return latex; // Fallback to plain text if rendering fails
+                    }
+                  });
+                });
+    </script>
+</head>
+
+<body>
+<div class="container-fluid px-md-5 pt-4">
+  <div class="row d-flex align-items-center">
+    <div class="col-md">
+
+      <div class="row">
+        <div class="col-md">
+          <h1 class="text-secondary mb-1">
+            <a href="https://paperfinder.xyz" class="text-decoration-none text-secondary"> neurips.paperfinder</a>
+          </h1>
+          <div class="lead mb-3">
+            A search tool for published NeurIPS proceedings from the last 40+ years.
+            <br/>
+          </div>
+        </div>
+        <div class="col-md-2 d-none text-md-right d-md-flex flex-column align-self-center">
+        </div>
+      </div>
+
+      <!-- <div class="mb-3 d-flex align-items-center">
+        <span class="mr-2">powered by</span>
+        <a href="https://github.com/typesense/typesense" target="_blank" alt="Typesense">
+          <img src="images/typesense.svg" width="114" height="25" />
+        </a>
+      </div> -->
+
+      <p class="text-muted">
+        <a role="button" data-toggle="modal" data-target="#aboutModal">about</a> 
+        <!-- <a href="https://github.com/typesense/showcase-xkcd-search" target="_blank">source code</a> -->
+      </p>
+    </div>
+  </div>
+
+  <div id="searchbox-container" class="row pt-3">
+    <div class="col-md justify-content-md-center">
+      <div id="searchbox"></div>
+      <div class="row mt-2 text-muted">
+        <div class="col-md">
+          Try:
+          <span id="example-search-terms">
+              <a role="button" class="clickable-search-term">language models</a>,
+              <a role="button" class="clickable-search-term">diffusion</a>,
+              <a role="button" class="clickable-search-term">state space</a>,
+              <a role="button" class="clickable-search-term">code</a>,
+              <a role="button" class="clickable-search-term">music</a>,
+              <a role="button" class="clickable-search-term">eval</a>,
+              <a role="button" class="clickable-search-term">glue</a>,
+              <a role="button" class="clickable-search-term">markov chains</a>,
+              <a role="button" class="clickable-search-term">survey</a>,
+              <a role="button" class="clickable-search-term">rlhf</a>
+            </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="results-section">
+    <div class="row mt-4 mt-md-4">
+      <div class="col-md-3">
+      </div>
+      <div class="col-md">
+        <div class="d-flex justify-content-md-end">
+          <div id="stats"
+               class="ml-md-2 text-md-right small d-flex align-items-center justify-content-end justify-content-md-start px-md-0"></div>
+          <!-- <div id="sort-by" class="ml-2 ml-md-3"></div> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-3">
+        <nav class="navbar navbar-expand-md navbar-light p-0 pb-3">
+          <button class="navbar-toggler text-primary border-light-2" type="button" data-toggle="collapse"
+                  data-target="#filters-section"
+                  aria-controls="filters-section" aria-expanded="false" aria-label="Toggle filters">
+            <!-- <span class="navbar-toggler-icon"></span><span class="text-secondary small ml-1">Filter Comics</span> -->
+          </button>
+
+          <div class="collapse navbar-collapse d-md-block mt-3 mt-md-0" id="filters-section">
+            <div class="row">
+              <div class="col-md">
+
+
+                <h5 class="text-secondary mb-2">search via</h5>
+                <!-- <div id="query-by-controls">
+                  <label for="query-by">Query By:</label>
+                  <select id="query-by" multiple>
+                    <option value="title" selected>Title</option>
+                    <option value="authors">Authors</option>
+                    <option value="embedding">Embedding</option>
+                  </select>
+
+                </div> -->
+                  <div class="dropdown">
+                      <label>
+                          <input type="radio" name="searchMode" value="default" checked />
+                          Keywords
+                      </label>
+                      <br />
+                      <label>
+                          <input type="radio" name="searchMode" value="title" />
+                           Title 
+                      </label>
+                      <br />
+                      <label>
+                        <input type="radio" name="searchMode" value="abstract" />
+                         Abstract 
+                    </label>
+                    <br />
+                    <label>
+                      <input type="radio" name="searchMode" value="authors" />
+                       Authors 
+                      
+                  </label>
+                  <br />
+                  <label>
+                    <input type="radio" name="searchMode" value="content" />
+                      Content (Full-text search)
+                </label>
+                  
+                </div>
+                <!-- <div id="comic-topic"></div> -->
+              </div>
+            </div>
+
+            <div class="row mt-5">
+              <div class="col-md">
+                <h5 class="text-secondary mb-2">published year</h5>
+                <div id="comic-publication-year"></div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+      <div class="col-md-9">
+        <div id="hits"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- About Modal -->
+<div id="aboutModal" class="modal fade" tabindex="-1" aria-labelledby="aboutLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content text-dark">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="aboutLabel">
+          About
+        </h5>
+        <button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          This website lets users search through NeurIPS papers from the last 40+ years. It offers full-text search capabilities, giving you an option to dive deeper and find papers based on their full content.</br>
+          It also attempts to resurface papers that might have been buried, or don't usually show up in the top search results via other engines.
+          It's a part of an ongoing effort to index research papers and make them more easily searchable.
+        </p>
+        <p>
+          Technical details:
+        </p>
+        <ul>
+          <li>
+            All papers are fully indexable
+          <li>
+            One can find papers by title, authors, abstract, and content.
+          </li>
+          <li>
+            The search engine is typo-tolerant to some-extent.
+          </li>
+        </ul>
+        <p>
+          The goal is to make research more accessible and easy to explore for the community.<br>
+          If you have any feedback (or want to contribute), please feel free to reach out.<br>
+          Made with &#9829; by <a href="https://sert121.vercel.app" target="_blank">yash</a>.
+        </p>
+        <p class="style =font-size: 0.5rem;">
+          The search engine is powered by <a href="https://typesense.org" target="_blank">Typesense</a>, an open-source, typo-tolerant search engine.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Read More Modal -->
+
+<div id="readMore" class="modal fade" tabindex="-1" aria-labelledby="readMoreLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content text-dark">
+      <div class="modal-header">
+        <h5 class="modal-title" id="readMoreLabel">Read More</h5>
+        <button type="button" class="close btn btn-primary" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-abstract"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script src="./src/app.js"></script>
+</body>
+
+</html>
