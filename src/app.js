@@ -198,8 +198,12 @@ search.addWidgets([
     },
     templates: {
 
+      
       item: (data) => {
-        console.log("Rendering item data:", data); // Log data for each item
+        const abstractWithLatex = data.abstract.replace(/\$(.*?)\$/g, (match, p1) => {
+          return katex.renderToString(p1, { throwOnError: false });
+        });
+
         return `
             <div class="row">
               <div class="col-12">
@@ -226,7 +230,7 @@ search.addWidgets([
             </div>
 
             <div class="abstract-container mt-2 overflow-auto">
-               ${data.abstract} <a href ="${
+               ${abstractWithLatex} <a href ="${
                     data.url
                   }"  target="_blank">[Read More]</a>
             </div>
@@ -344,9 +348,13 @@ function updateSearchParameters(queryByFields, ) {
       },
       templates: {
         item: (data) => {
+          const abstractWithLatex = data.abstract.replace(/\$(.*?)\$/g, (match, p1) => {
+            return katex.renderToString(p1, { throwOnError: false });
+          });
           return `
               <div class="row">
                 <div class="col-12">
+
                <a href="${
                     data.url
                   }"  target="_blank" class="text-decoration-none"> <h4 style="overflow-wrap: break-word;" class="text-secondary mb-1">
@@ -356,14 +364,13 @@ function updateSearchParameters(queryByFields, ) {
             ${data.authors.join(', ')}
           </span>
                   <div class="text-muted small">
-                    <a href="${
-                      data.url
-                    }" target="_blank" class="text-decoration-none">${
+                    ${
             data.year
-          }</a>
-                    • <a class="btn-copy-to-clipboard text-decoration-none" href="#" data-link="${
-                      data.url
-                    }">Copy to Clipboard</a>
+          }
+                 • <a class="btn-copy-to-clipboard text-decoration-none"  style="font-size: 0.8rem" href="#" data-link="${
+                    data.url
+                  }">Copy to Clipboard
+                  </a>
                     • <a class="text-decoration-none" target="_blank" href="${
                       data.pdf_url
                     }">PDF</a>
@@ -372,7 +379,7 @@ function updateSearchParameters(queryByFields, ) {
               </div>
 
               <div class="mt-2 overflow-auto">
-                ${data.abstract}
+                ${abstractWithLatex}
               </div>
               <div class="text-muted small mt-1">
   
@@ -429,9 +436,6 @@ document.addEventListener('DOMContentLoaded', function () {
       else if (selectedMode === 'authors') {
         queryByFields = 'authors';
       }
-      else if (selectedMode === 'year') {
-        queryByFields = 'title, abstract, authors';
-      }
       else if (selectedMode === 'content') {
         queryByFields = 'content';
       }
@@ -448,7 +452,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 search.on('render', function () {
   // Copy-to-Clipboard event handler
+
+    // Delegated event handler for Copy-to-Clipboard
+  $('#hits').on('click', '.btn-copy-to-clipboard', handleCopyToClipboard);
+
+
   $('.btn-copy-to-clipboard').on('click', handleCopyToClipboard);
+  
   $('.topic').on('click', handleTopicClick);
 });
 
