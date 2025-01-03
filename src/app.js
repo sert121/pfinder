@@ -199,10 +199,7 @@ search.addWidgets([
     templates: {
 
       item: (data) => {
-        const abstractWithLatex = data.abstract.replace(/\$(.*?)\$/g, (match, p1) => {
-          return katex.renderToString(p1, { throwOnError: false });
-        });
-
+        console.log("Rendering item data:", data); // Log data for each item
         return `
             <div class="row">
               <div class="col-12">
@@ -229,7 +226,7 @@ search.addWidgets([
             </div>
 
             <div class="abstract-container mt-2 overflow-auto">
-               ${abstractWithLatex} <a href ="${
+               ${data.abstract} <a href ="${
                     data.url
                   }"  target="_blank">[Read More]</a>
             </div>
@@ -265,28 +262,14 @@ search.start();
 
 function updateSearchParameters(queryByFields, ) {
   // Create a new TypesenseInstantSearchAdapter with the updated parameters
-  let additionalParams = {
-    };
-  if (queryByFields === 'year') {
-    additionalParams = {
-      query_by: 'title, abstract, authors',
-      num_typos: 2,
-      exclude_fields: 'embedding', // Exclude embedding for keyword searches queryByFields === 'embedding' ? '' : 'embedding'
-      filter_by: `year:=${queryByFields}`,
-
-    }  
-  }
-  else {
-    additionalParams = {
-      query_by: queryByFields,
-      num_typos: 2,
-      exclude_fields: 'embedding', // Exclude embedding for keyword searches queryByFields === 'embedding' ? '' : 'embedding'
-    }
-  }
 
   typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
     server: TYPESENSE_SERVER_CONFIG,
-    additionalSearchParameters: additionalParams,
+    additionalSearchParameters: {
+      query_by: queryByFields,
+      num_typos: 2,
+       // Exclude embedding for keyword searches queryByFields === 'embedding' ? '' : 'embedding'
+    }  ,
   });
 
   // Create a new search client
@@ -364,9 +347,14 @@ function updateSearchParameters(queryByFields, ) {
           return `
               <div class="row">
                 <div class="col-12">
-                  <h3 style="overflow-wrap: break-word;" class="text-secondary mb-1">
-                    ${data.title}
-                  </h3>
+               <a href="${
+                    data.url
+                  }"  target="_blank" class="text-decoration-none"> <h4 style="overflow-wrap: break-word;" class="text-secondary mb-1">
+                  ${data.title}
+                </h4> </a>
+              <span style="font-weight: 500; font-size: 0.9rem; color: #596185;">
+            ${data.authors.join(', ')}
+          </span>
                   <div class="text-muted small">
                     <a href="${
                       data.url
@@ -386,17 +374,6 @@ function updateSearchParameters(queryByFields, ) {
               <div class="mt-2 overflow-auto">
                 ${data.abstract}
               </div>
-                <script>
-                document.querySelectorAll('.abstract-container').forEach(container => {
-                  container.innerHTML = container.innerHTML.replace(/\$(.*?)\$/g, (_, latex) => {
-                    try {
-                      return katex.renderToString(latex, { throwOnError: false });
-                    } catch {
-                      return latex; // Fallback to plain text if rendering fails
-                    }
-                  });
-                });
-    </script>
               <div class="text-muted small mt-1">
   
               </div>
