@@ -1,5 +1,5 @@
 {
-  "name": "showcase-xkcd-search",
+  "name": "showcase-search",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -7,11 +7,7 @@
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "typesenseServer": "docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesense:0.20.0 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors",
-    "fetchData": "node scripts/fetchExplainXkcdData.mjs && node scripts/fetchXkcdData.mjs",
-    "transformData": "node scripts/transformData.mjs",
-    "indexData": "node scripts/indexData.js",
-    "refreshData": "yarn fetchData && yarn transformData && yarn indexData",
-    "build": "parcel build index.html --public-url https://findxkcd.com"
+    "build": "parcel build index.html --public-url https://example.com"
   },
   "engines": {
     "node": ">=16.0"
@@ -30,8 +26,6 @@
     "@babel/runtime": "^7.14.0",
     "@popperjs/core": "^2.9.2",
     "bootstrap": "^4.5.2",
-    "cheerio": "^1.0.0-rc.10",
-    "copy-to-clipboard": "^3.3.1",
     "dotenv": "^9.0.0",
     "instantsearch.js": "^4.22.0",
     "jquery": "^3.6.0",
