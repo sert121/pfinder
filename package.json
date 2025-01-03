@@ -7,7 +7,7 @@
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "typesenseServer": "docker run -i -p 8108:8108 -v/tmp/typesense-server-data/:/data typesense/typesense:0.20.0 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors",
-    "build": "parcel build index.html --public-url https://example.com"
+    "build": "yarn build --public-url /"
   },
   "engines": {
     "node": ">=16.0"
